@@ -4,12 +4,12 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
 
         if (isset($_GET['attachements']) && !empty($_GET['attachements'])) {
-            get_attachements($_GET['attachements']);
+            get_file('attachements', $_GET['attachements']);
             break;
         }
 
         if (isset($_GET['profiles']) && !empty($_GET['profiles'])) {
-            get_profiles($_GET['profiles']);
+            get_file('profiles',$_GET['profiles']);
             break;
         }
 
@@ -33,27 +33,9 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
 exit();
 
-function get_attachements($uuid)
+function get_file($where, $uuid)
 {
-    $file = dirname(__FILE__) . "/data/attachements/$uuid";
-
-    if(!file_exists($file)){
-        http_response_code(404);
-        exit();
-    }
-
-    $type = mime_content_type($file);
-
-    header("Content-Disposition: inline");
-    header("Content-Type: $type");
-    readfile($file);
-
-    exit();
-}
-
-function get_profiles($uuid)
-{
-    $file = dirname(__FILE__) . "/data/profiles/$uuid";
+    $file = dirname(__FILE__) . "/data/$where/$uuid";
 
     if(!file_exists($file)){
         http_response_code(404);
