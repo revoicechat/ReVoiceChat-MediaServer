@@ -1,0 +1,13 @@
+# Test files
+test*
+
+# Stored files
+attachements/*
+profiles/*
+emojis/*
+
+# Default files
+!attachements/.keep
+!profiles/.keep
+!emojis/.keep
+!attachements/logo
