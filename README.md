@@ -26,8 +26,13 @@ VirtualHost exemple
     DirectoryIndex index.php
 
     <Directory /var/www/html/ReVoiceChat-MediaServer/www/>
-            AllowOverride All
-            Require all granted
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    <Directory /var/www/html/ReVoiceChat-MediaServer/www/data/>
+        AllowOverride None
+        Require all denied
     </Directory>
 
     ErrorLog /var/www/html/logs/rvcm_http_error.log
