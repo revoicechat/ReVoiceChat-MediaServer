@@ -1,1 +1,11 @@
+# Test files
 test*
+
+# Stored files
+attachements/*
+profiles/*
+
+# Default files
+!attachements/placeholder
+!profiles/placeholder
+!attachements/logo
