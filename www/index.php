@@ -9,7 +9,12 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         }
 
         if (isset($_GET['profiles']) && !empty($_GET['profiles'])) {
-            get_file('profiles',$_GET['profiles']);
+            get_file('profiles', $_GET['profiles']);
+            break;
+        }
+
+        if (isset($_GET['emojis']) && !empty($_GET['emojis'])) {
+            get_file('emojis', $_GET['emojis']);
             break;
         }
 
@@ -37,7 +42,7 @@ function get_file($where, $name)
 {
     $file = dirname(__FILE__) . "/data/$where/$name";
 
-    if(!file_exists($file)){
+    if (!file_exists($file)) {
         http_response_code(404);
         exit();
     }
