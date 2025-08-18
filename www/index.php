@@ -33,9 +33,9 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
 exit();
 
-function get_file($where, $uuid)
+function get_file($where, $name)
 {
-    $file = dirname(__FILE__) . "/data/$where/$uuid";
+    $file = dirname(__FILE__) . "/data/$where/$name";
 
     if(!file_exists($file)){
         http_response_code(404);
