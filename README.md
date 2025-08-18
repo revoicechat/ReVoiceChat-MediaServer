@@ -36,11 +36,14 @@ VirtualHost exemple
         Require all denied
     </Directory>
 
-    ErrorLog /var/www/html/logs/rvcm_http_error.log
+    ErrorLog /var/log/rvcm/error.log
+    TransferLog /var/log/rvcm/access.log
     LogLevel info
 </VirtualHost>
 ```
 **Cache-Control** can be set to **no-cache, must-revalidate**
+
+Make sure **/var/log/rvcm/** exist and apache2 can write to it
 
 Enable **VirtualHost**
 ```sh
