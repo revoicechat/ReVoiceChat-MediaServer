@@ -22,6 +22,7 @@ VirtualHost exemple
 ```apache
 <VirtualHost *:80>
     Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods: GET,POST,OPTIONS,DELETE
 
     DocumentRoot /var/www/html/ReVoiceChat-MediaServer/www/
     DirectoryIndex index.php
