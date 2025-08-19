@@ -59,7 +59,7 @@ function get_file($where, $name)
     $file = dirname(__FILE__) . "/data/$where/$name";
 
     if (!file_exists($file)) {
-        http_response_code(404);
+        http_response_code(204);
         exit();
     }
 
@@ -80,7 +80,7 @@ function option_file($where, $name)
         http_response_code(200);
         exit();
     } else {
-        http_response_code(404);
+        http_response_code(204);
         exit();
     }
 }
