@@ -21,6 +21,22 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         http_response_code(400);
         break;
 
+    case 'OPTIONS':
+        if (isset($_GET['attachements']) && !empty($_GET['attachements'])) {
+            option_file('attachements', $_GET['attachements']);
+            break;
+        }
+
+        if (isset($_GET['profiles']) && !empty($_GET['profiles'])) {
+            option_file('profiles', $_GET['profiles']);
+            break;
+        }
+
+        if (isset($_GET['emojis']) && !empty($_GET['emojis'])) {
+            option_file('emojis', $_GET['emojis']);
+            break;
+        }
+
     case 'POST':
 
         http_response_code(400);
@@ -54,4 +70,17 @@ function get_file($where, $name)
     readfile($file);
 
     exit();
+}
+
+function option_file($where, $name)
+{
+    $file = dirname(__FILE__) . "/data/$where/$name";
+
+    if (file_exists($file)) {
+        http_response_code(200);
+        exit();
+    } else {
+        http_response_code(404);
+        exit();
+    }
 }
