@@ -4,8 +4,10 @@ test*
 # Stored files
 attachements/*
 profiles/*
+emojis/*
 
 # Default files
 !attachements/placeholder
 !profiles/placeholder
+!emojis/placeholder
 !attachements/logo
