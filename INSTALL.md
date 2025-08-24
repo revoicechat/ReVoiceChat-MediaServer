@@ -17,6 +17,10 @@ sudo a2enmod headers
 sudo a2enmod rewrite
 ```
 
+```sh
+sudo systemctl restart apache2
+```
+
 ### Clone this repository
 
 For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
