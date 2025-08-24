@@ -61,8 +61,6 @@ VirtualHost exemple :
 </VirtualHost>
 ```
 
-**Cache-Control** can be set to **no-cache, must-revalidate**
-
 Make sure **/var/log/rvc/** exist and apache2 can write to it
 
 Enable **VirtualHost**
