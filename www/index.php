@@ -13,8 +13,18 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             break;
         }
 
-        if (isset($_GET['emojis']) && !empty($_GET['emojis'])) {
-            get_file('emojis', $_GET['emojis']);
+        if (isset($_GET['emojis'])) {
+            // Direct file access
+            if (!empty($_GET['emojis'])) {
+                get_file('emojis', $_GET['emojis']);
+            }
+
+            // List of available emojis
+            if (isset($_GET['list'])) {
+                get_emojis_list();
+                break;
+            }
+
             break;
         }
 
@@ -68,6 +78,16 @@ function get_file($where, $name)
     header("Content-Disposition: inline");
     header("Content-Type: $type");
     readfile($file);
+
+    exit();
+}
+
+function get_emojis_list(){
+    $list = scandir(dirname(__FILE__) . "/data/emojis/");
+    $result = array_diff($list, [".", "..", "placeholder"]);
+
+    header("Content-Type: application/json");
+    echo json_encode($result);
 
     exit();
 }
