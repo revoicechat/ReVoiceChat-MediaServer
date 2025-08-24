@@ -1,24 +1,36 @@
 ## How to install ReVoiceChat-MediaServer
 
 ### Install Apache2 and PHP
-```sudo apt-get install apache2-utils apache2 php libapache2-mod-php php-json php-zip php-curl -y```
+```sh
+sudo apt-get install apache2-utils apache2 php libapache2-mod-php php-json php-zip php-curl -y
+```
 
-```sudo systemctl enable apache2```
+```sh
+sudo systemctl enable apache2
+```
 
-```sudo a2enmod headers```
+```sh
+sudo a2enmod headers
+```
 
-```sudo a2enmod rewrite```
+```sh
+sudo a2enmod rewrite
+```
 
 ### Clone this repository
 
 For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
 
-```git clone https://github.com/revoicechat/ReVoiceChat-MediaServer```
+```sh
+git clone https://github.com/revoicechat/ReVoiceChat-MediaServer
+```
 
 ### Create VirtualHost
 
 Create new **VirtualHost**
-```sudo nano /etc/apache2/sites-available/rvc_media.conf```
+```sh
+sudo nano /etc/apache2/sites-available/rvc_media.conf
+```
 
 VirtualHost exemple :
 ```apache
@@ -52,5 +64,8 @@ Make sure **/var/log/rvc/** exist and apache2 can write to it
 Enable **VirtualHost**
 ```sh
 sudo a2ensite rvcm.conf
+```
+
+```sh
 sudo systemctl reload apache2
 ```
