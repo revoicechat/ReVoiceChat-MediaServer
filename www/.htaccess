@@ -3,4 +3,4 @@ RewriteCond %{REQUEST_URI} !\.php$
 RewriteRule attachements/([0-9A-Za-z-]+)$ index.php?attachements=$1
 RewriteRule profiles/([0-9A-Za-z-]+)$ index.php?profiles=$1
 RewriteRule emojis/list index.php?emojis&list
-RewriteRule emojis/([0-9A-Za-z-]+)$ index.php?emojis=$1
+RewriteRule emojis/([0-9A-Za-z-.]+)$ index.php?emojis=$1
