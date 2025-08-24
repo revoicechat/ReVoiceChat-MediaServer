@@ -1,6 +1,6 @@
-## How to install ReVoiceChat-MediaServer
+# How to install ReVoiceChat-MediaServer
 
-### Install Apache2 and PHP
+## Install Apache2 and PHP
 ```sh
 sudo apt-get install apache2-utils apache2 php libapache2-mod-php php-json php-zip php-curl -y
 ```
@@ -21,7 +21,7 @@ sudo a2enmod rewrite
 sudo systemctl restart apache2
 ```
 
-### Clone this repository
+## Clone this repository
 
 For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
 
@@ -29,7 +29,7 @@ For this guide, we will use ```/srv/rvc``` but you can use any directory (don't 
 git clone https://github.com/revoicechat/ReVoiceChat-MediaServer
 ```
 
-### Create VirtualHost
+## Create VirtualHost
 
 Create new **VirtualHost**
 ```sh
@@ -38,7 +38,7 @@ sudo nano /etc/apache2/sites-available/rvc_media.conf
 
 VirtualHost exemple :
 ```apache
-<VirtualHost *:80>
+<VirtualHost *:88>
     Header set Access-Control-Allow-Origin "*"
     Header set Access-Control-Allow-Methods: GET,POST,OPTIONS,DELETE
 
@@ -71,3 +71,32 @@ sudo a2ensite rvcm.conf
 ```sh
 sudo systemctl reload apache2
 ```
+
+## Configure Reverse Proxy (Nginx)
+
+We recommend using [Nginx Proxy Manager](https://nginxproxymanager.com/).
+
+Add a proxy host in Nginx Proxy Manager with the following :
+
+### Details
+
+Domain names : `media.yourdomain.me`
+
+Scheme : `http`
+
+Forward Hostname / IP : `Your IP`
+
+Forward Port : `88` (default for this virtual host config)
+
+### Custom locations
+
+None
+
+### SSL
+
+You may want to add SSL, if so, enable `Force SSL` and `HTTP/2 Support`
+
+### Advanced
+
+None
+
