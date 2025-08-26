@@ -125,11 +125,11 @@ function options_file_bulk($where, $names)
 
     foreach ($names as $name) {
         $file = dirname(__FILE__) . "/data/$where/$name";
-        $array[$name] = file_exists($file);
-        //array_push($result, ["id" => $name, "fileExist" => file_exists($file)]);
+        $result[$name] = file_exists($file);
     }
 
     http_response_code(200);
+    header("Content-Type: application/json");
     echo json_encode($result);
 
     exit();
