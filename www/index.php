@@ -1,5 +1,7 @@
 <?php
 
+$body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_ARRAY);
+
 switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
 
@@ -33,19 +35,30 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
     case 'OPTIONS':
         if (isset($_GET['attachements']) && !empty($_GET['attachements'])) {
-            option_file('attachements', $_GET['attachements']);
+            options_file('attachements', $_GET['attachements']);
             break;
         }
 
         if (isset($_GET['profiles']) && !empty($_GET['profiles'])) {
-            option_file('profiles', $_GET['profiles']);
+            if ($_GET['profiles'] == "bulk") {
+                options_file_bulk('profiles', $body);
+            } else {
+                options_file('profiles', $_GET['profiles']);
+            }
             break;
         }
 
         if (isset($_GET['emojis']) && !empty($_GET['emojis'])) {
-            option_file('emojis', $_GET['emojis']);
+            if ($_GET['emojis'] == "bulk") {
+                options_file_bulk('emojis', $body);
+            } else {
+                options_file('emojis', $_GET['emojis']);
+            }
             break;
         }
+
+        http_response_code(400);
+        break;
 
     case 'POST':
 
@@ -69,7 +82,7 @@ function get_file($where, $name)
     $file = dirname(__FILE__) . "/data/$where/$name";
 
     if (!file_exists($file)) {
-        http_response_code(204);
+        http_response_code(404);
         exit();
     }
 
@@ -82,7 +95,8 @@ function get_file($where, $name)
     exit();
 }
 
-function get_emojis_list(){
+function get_emojis_list()
+{
     $list = scandir(dirname(__FILE__) . "/data/emojis/");
     $result = array_values(array_diff($list, [".", "..", "placeholder"]));
 
@@ -92,7 +106,7 @@ function get_emojis_list(){
     exit();
 }
 
-function option_file($where, $name)
+function options_file($where, $name)
 {
     $file = dirname(__FILE__) . "/data/$where/$name";
 
@@ -103,4 +117,19 @@ function option_file($where, $name)
         http_response_code(204);
         exit();
     }
+}
+
+function options_file_bulk($where, $names)
+{
+    $result = [];
+
+    foreach ($names as $name) {
+        $file = dirname(__FILE__) . "/data/$where/$name";
+        array_push($result, [$name => file_exists($file)]);
+    }
+
+    http_response_code(200);
+    echo json_encode($result);
+
+    exit();
 }
