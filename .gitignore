@@ -7,7 +7,7 @@ profiles/*
 emojis/*
 
 # Default files
-!attachements/placeholder
-!profiles/placeholder
-!emojis/placeholder
+!attachements/.keep
+!profiles/.keep
+!emojis/.keep
 !attachements/logo

@@ -98,7 +98,7 @@ function get_file($where, $name)
 function get_emojis_list()
 {
     $list = scandir(dirname(__FILE__) . "/data/emojis/");
-    $result = array_values(array_diff($list, [".", "..", "placeholder"]));
+    $result = array_values(array_diff($list, [".", "..", ".keep"]));
 
     header("Content-Type: application/json");
     echo json_encode($result);
