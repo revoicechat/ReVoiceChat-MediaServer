@@ -5,11 +5,15 @@ test*
 attachements/*
 profiles/*
 emojis/*
+emojis/global/*
 
 # Default files
 !attachements/.keep
 !profiles/.keep
 !emojis/.keep
+!emojis/global/.keep
+
+# Logo
 !attachements/logo
 
 ### IntelliJ IDEA ###
