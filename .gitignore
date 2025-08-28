@@ -5,11 +5,13 @@ test*
 attachements/*
 profiles/*
 emojis/*
+emojis/global/*
 
 #  Keep files
 !attachements/.keep
 !profiles/.keep
 !emojis/.keep
+!emojis/global/.keep
 
 # Logo
 !attachements/logo
