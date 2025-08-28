@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  php-app:
+    build: .
+    container_name: php-server
+    ports:
+      - "8081:80"
+    volumes:
+      # Mount local www/data directory into container
+      - ./www/data:/var/www/html/data
+    restart: unless-stopped
