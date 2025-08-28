@@ -1,5 +1,7 @@
 <?php
 
+use LDAP\Result;
+
 $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_ARRAY);
 
 switch ($_SERVER["REQUEST_METHOD"]) {
@@ -15,18 +17,23 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             break;
         }
 
-        if (isset($_GET['emojis'])) {
-            // Direct file access
-            if (!empty($_GET['emojis'])) {
-                get_file('emojis', $_GET['emojis']);
-            }
-
-            // List of available emojis
-            if (isset($_GET['list'])) {
-                get_emojis_list();
+        if (isset($_GET['emojis-global'])) {
+            if ($_GET['emojis-global'] == "all") {
+                get_emojis_global_all();
+                break;
+            } else {
+                get_file('emojis/global', $_GET['emojis-global']);
                 break;
             }
+        }
 
+        if (isset($_GET['emojis']) && !empty($_GET['emojis'])) {
+            // Direct file access
+            if ($_GET['emojis'] == 'all') {
+                get_emojis_all();
+            } else {
+                get_file('emojis', $_GET['emojis']);
+            }
             break;
         }
 
@@ -95,13 +102,24 @@ function get_file($where, $name)
     exit();
 }
 
-function get_emojis_list()
+function get_emojis_all()
 {
     $list = scandir(dirname(__FILE__) . "/data/emojis/");
     $result = array_values(array_diff($list, [".", "..", ".keep"]));
 
     header("Content-Type: application/json");
     echo json_encode($result);
+
+    exit();
+}
+
+function get_emojis_global_all()
+{
+    $list = scandir(dirname(__FILE__) . "/data/emojis/global/");
+    $list = array_values(array_diff($list, [".", "..", ".keep"]));
+
+    header("Content-Type: application/json");
+    echo json_encode($list);
 
     exit();
 }

@@ -8,7 +8,9 @@ RewriteRule attachements/([0-9A-Za-z-]+)$ index.php?attachements=$1
 RewriteRule profiles/bulk index.php?profiles=bulk
 RewriteRule profiles/([0-9A-Za-z-]+)$ index.php?profiles=$1
 
-# Emojis
-RewriteRule emojis/list index.php?emojis=list
+# Emojis global
+RewriteRule emojis/global/all index.php?emojis-global=all
+RewriteRule emojis/global/([0-9A-Za-z-.]+)$ index.php?emojis-global=$1
+
 RewriteRule emojis/bulk index.php?emojis=bulk
 RewriteRule emojis/([0-9A-Za-z-.]+)$ index.php?emojis=$1
