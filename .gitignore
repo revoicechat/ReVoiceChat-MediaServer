@@ -2,10 +2,10 @@
 test*
 
 # Stored files
-attachements/*
-profiles/*
-emojis/*
-emojis/global/*
+attachements*
+profiles*
+emojis*
+emojis/global*
 
 # Default files
 !attachements/.keep
