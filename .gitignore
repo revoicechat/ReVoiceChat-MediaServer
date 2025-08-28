@@ -11,3 +11,9 @@ emojis/*
 !profiles/.keep
 !emojis/.keep
 !attachements/logo
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
