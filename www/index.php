@@ -40,7 +40,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         http_response_code(400);
         break;
 
-    case 'OPTIONS':
+    case 'POST':
         if (isset($_GET['attachements']) && !empty($_GET['attachements'])) {
             options_file('attachements', $_GET['attachements']);
             break;
@@ -63,11 +63,6 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             }
             break;
         }
-
-        http_response_code(400);
-        break;
-
-    case 'POST':
 
         http_response_code(400);
         break;
