@@ -2,6 +2,8 @@
 
 use LDAP\Result;
 
+const CONTENT_TYPE_APPLICATION_JSON = "Content-Type: application/json";
+
 $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_ARRAY);
 
 switch ($_SERVER["REQUEST_METHOD"]) {
@@ -50,7 +52,11 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             if ($_GET['profiles'] == "bulk") {
                 options_file_bulk('profiles', $body);
             } else {
-                options_file('profiles', $_GET['profiles']);
+                if (preg_match('#^.*/profiles/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$#', $_SERVER['REQUEST_URI'], $matches)) {
+                    $id = $matches[1];
+                    upload_profile_file($id);
+                    break;
+                }
             }
             break;
         }
@@ -71,7 +77,6 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
         http_response_code(400);
         break;
-
     default:
         http_response_code(405);
         break;
@@ -84,6 +89,9 @@ function get_file($where, $name)
     $file = dirname(__FILE__) . "/data/$where/$name";
 
     if (!file_exists($file)) {
+        if ($where == "profiles" && $name != "default-avatar") {
+            get_file("profiles", "default-avatar");
+        }
         http_response_code(404);
         exit();
     }
@@ -102,7 +110,7 @@ function get_emojis_all()
     $list = scandir(dirname(__FILE__) . "/data/emojis/");
     $result = array_values(array_diff($list, [".", "..", ".keep"]));
 
-    header("Content-Type: application/json");
+    header(CONTENT_TYPE_APPLICATION_JSON);
     echo json_encode($result);
 
     exit();
@@ -113,7 +121,7 @@ function get_emojis_global_all()
     $list = scandir(dirname(__FILE__) . "/data/emojis/global/");
     $list = array_values(array_diff($list, [".", "..", ".keep"]));
 
-    header("Content-Type: application/json");
+    header(CONTENT_TYPE_APPLICATION_JSON);
     echo json_encode($list);
 
     exit();
@@ -142,8 +150,42 @@ function options_file_bulk($where, $names)
     }
 
     http_response_code(200);
-    header("Content-Type: application/json");
+    header(CONTENT_TYPE_APPLICATION_JSON);
     echo json_encode($result);
 
     exit();
+}
+
+function upload_profile_file($id) {
+    // Check if a file was uploaded
+    if (!isset($_FILES['file'])) {
+        http_response_code(400);
+        echo json_encode(['error' => 'No file uploaded']);
+        return;
+    }
+    if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Upload error']);
+        return;
+    }
+
+    $file = $_FILES['file'];
+
+    // Define storage path
+    $uploadDir = __DIR__ . '/data/profiles/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true); // create directory if not exists
+    }
+
+    // Use the ID as filename, no extension
+    $destination = $uploadDir . $id;
+
+    // Move uploaded file (overwriting if it exists)
+    if (move_uploaded_file($file['tmp_name'], $destination)) {
+        http_response_code(200);
+        echo json_encode(['success' => true, 'path' => '/data/profiles/' . $id]);
+    } else {
+        http_response_code(500);
+        echo json_encode(['error' => 'Failed to save file']);
+    }
 }
