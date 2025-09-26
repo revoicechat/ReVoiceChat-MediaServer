@@ -13,6 +13,7 @@ emojis/global*
 !profiles/.keep
 !emojis/.keep
 !emojis/global/.keep
+www/settings.ini
 
 # Logo
 !attachements/logo
