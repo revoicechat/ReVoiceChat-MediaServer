@@ -10,3 +10,5 @@ services:
       # Mount local www/data directory into container
       - ./www/data:/var/www/html/data
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
