@@ -9,6 +9,7 @@ emojis/global*
 
 # Default files
 !attachements/.keep
+!profiles/default-avatar
 !profiles/.keep
 !emojis/.keep
 !emojis/global/.keep
@@ -21,3 +22,6 @@ emojis/global*
 *.iws
 *.iml
 *.ipr
+
+### Sonar ###
+.scannerwork
