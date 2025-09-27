@@ -2,7 +2,7 @@
 
 /**
  * Manages upload and copy of files uploaded
- * @param string $file_field File field
+ * @param string $file_field File field name
  * @param string $destination
  * @return true|RuntimeException True on OK | RuntimeException
  */
