@@ -4,18 +4,19 @@
  * Manages upload and copy of files uploaded
  * @param string $file_field File field name
  * @param string $destination
- * @return true|RuntimeException True on OK | RuntimeException
+ * @return true|FileUploadException True on OK | FileUploadException
  */
+
+class FileUploadException extends RuntimeException{}
 
 function file_upload(string $file_field, string $destination)
 {
-    // Return true if everything OK.
-    $MAX_FILE_SIZE = file_upload_max_size();
-    $MAX_FILE_SIZE_HUMAN = human_file_size($MAX_FILE_SIZE);
+    define('MAX_FILE_SIZE', file_upload_max_size());
+    define('MAX_FILE_SIZE_HUMAN', human_file_size(MAX_FILE_SIZE));
 
     // If this request falls under any of them, treat it invalid.
     if (!isset($_FILES[$file_field]['error']) || is_array($_FILES[$file_field]['error'])) {
-        throw new RuntimeException('Invalid parameters');
+        throw new FileUploadException('Invalid parameters');
     }
 
     // Check $_FILES[$file_field]['error'] value.
@@ -23,17 +24,17 @@ function file_upload(string $file_field, string $destination)
         case UPLOAD_ERR_OK:
             break;
         case UPLOAD_ERR_NO_FILE:
-            throw new RuntimeException('No file sent');
+            throw new FileUploadException('No file sent');
         case UPLOAD_ERR_INI_SIZE:
         case UPLOAD_ERR_FORM_SIZE:
-            throw new RuntimeException("The file size exceeds the maximum allowed size (Limit: $MAX_FILE_SIZE_HUMAN)");
+            throw new FileUploadException("The file size exceeds the maximum allowed size (Limit: MAX_FILE_SIZE_HUMAN)");
         default:
-            throw new RuntimeException('Unknow error');
+            throw new FileUploadException('Unknow error');
     }
 
     // Double check file size
-    if ($_FILES[$file_field]['size'] > $MAX_FILE_SIZE) {
-        throw new RuntimeException("The file size exceeds the maximum allowed size (Limit: $MAX_FILE_SIZE_HUMAN)");
+    if ($_FILES[$file_field]['size'] > MAX_FILE_SIZE) {
+        throw new FileUploadException("The file size exceeds the maximum allowed size (Limit: MAX_FILE_SIZE_HUMAN)");
     }
 
     // Check MIME
@@ -57,7 +58,7 @@ function file_upload(string $file_field, string $destination)
         ),
         true
     )) {
-        throw new RuntimeException('Unsupported file format');
+        throw new FileUploadException('Unsupported file format');
     }
 
     // Double check MIME for dotx/docx and xltx/xlsx
@@ -72,13 +73,13 @@ function file_upload(string $file_field, string $destination)
             ),
             true
         )) {
-            throw new RuntimeException('Unsupported file format');
+            throw new FileUploadException('Unsupported file format');
         }
     }
 
     // Move to directory
     if (!move_uploaded_file($_FILES[$file_field]['tmp_name'], "$destination")) {
-        throw new RuntimeException('Unable to move the file.');
+        throw new FileUploadException('Unable to move the file.');
     }
 
     return true;
