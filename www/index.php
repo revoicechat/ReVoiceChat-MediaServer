@@ -161,20 +161,9 @@ function options_file_bulk($where, $names)
     exit();
 }
 
-function upload_profile_file($id) {
-    // Check if a file was uploaded
-    if (!isset($_FILES['file'])) {
-        http_response_code(400);
-        echo json_encode(['error' => 'No file uploaded']);
-        return;
-    }
-    if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Upload error']);
-        return;
-    }
-
-    $file = $_FILES['file'];
+function upload_profile_file($id)
+{
+    require_once('src/file_upload.php');
 
     // Define storage path
     $uploadDir = __DIR__ . '/data/profiles/';
@@ -182,20 +171,23 @@ function upload_profile_file($id) {
         mkdir($uploadDir, 0755, true); // create directory if not exists
     }
 
-    // Use the ID as filename, no extension
-    $destination = $uploadDir . $id;
-
-    // Move uploaded file (overwriting if it exists)
-    if (move_uploaded_file($file['tmp_name'], $destination)) {
-        http_response_code(200);
-        echo json_encode(['success' => true, 'path' => '/data/profiles/' . $id]);
-    } else {
+    try {
+        // Use the user ID as filename, no extension
+        file_upload($_FILES['file'], $uploadDir . $id);
+    } catch (RuntimeException $e) {
         http_response_code(500);
-        echo json_encode(['error' => 'Failed to save file']);
+        echo json_encode(['error' => $e]);
+        return;
     }
+
+    // OK
+    http_response_code(200);
+    echo json_encode(['success' => true, 'path' => '/data/profiles/' . $id]);
+    return;
 }
 
-function get_current_user_from_auth() {
+function get_current_user_from_auth()
+{
     $settings = parse_ini_file(dirname(__FILE__) . '/settings.ini', true);
     $authHeader = get_authorization_header();
     $url = $settings['api']['user_me_url'];
@@ -237,7 +229,8 @@ function get_current_user_from_auth() {
     return json_decode($response, true); // return parsed user JSON
 }
 
-function get_authorization_header() {
+function get_authorization_header()
+{
     if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         return $_SERVER['HTTP_AUTHORIZATION'];
     }
