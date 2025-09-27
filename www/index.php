@@ -174,7 +174,7 @@ function upload_profile_file($id)
 
     try {
         // Use the user ID as filename, no extension
-        file_upload($_FILES['file'], $uploadDir . $id);
+        file_upload('file', $uploadDir . $id);
     } catch (RuntimeException $e) {
         http_response_code(500);
         echo json_encode(['error' => $e]);
