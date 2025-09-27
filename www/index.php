@@ -56,8 +56,9 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                     $id = $matches[1];
                     $user = get_current_user_from_auth();
                     if ($id != $user['id'] || $user['type'] != 'ADMIN') {
-                        echo json_encode(['error' => 'You cannot edit this profile']);
+                        echo json_encode(['error' => 'You cannot edit this profile', 'user' => $user]);
                         http_response_code(401);
+                        break;
                     }
                     upload_profile_file($id);
                     break;
