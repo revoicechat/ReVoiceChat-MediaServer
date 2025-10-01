@@ -10,9 +10,9 @@ RewriteRule profiles/([0-9A-Za-z-]+)$ index.php?profiles=$1 [L]
 # Emojis global
 RewriteRule emojis/global/upload emojis.php?global&upload [L]
 RewriteRule emojis/global/all emojis.php?global&all [L]
-RewriteRule emojis/global/([0-9A-Za-z-.]*)$ emojis.php?global&emojis=$1 [L]
+RewriteRule emojis/global/([0-9A-Za-z-.]*)$ emojis.php?global&emoji=$1 [L]
 
 # Emojis server
 RewriteRule emojis/server/([0-9A-Za-z-.]*)$/upload emojis.php?server=$1&upload [L]
 RewriteRule emojis/server/([0-9A-Za-z-.]*)$/all emojis.php?server=$1&all [L]
-RewriteRule emojis/server/([0-9A-Za-z-.]*)/([0-9A-Za-z-.]*)$ emojis.php?server=$1&emojis=$2 [L]
+RewriteRule emojis/server/([0-9A-Za-z-.]*)/([0-9A-Za-z-.]*)$ emojis.php?server=$1&emoji=$2 [L]
