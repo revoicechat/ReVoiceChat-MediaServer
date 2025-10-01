@@ -1,5 +1,5 @@
 <?php
-require_once 'src/file_access.php';
+require_once 'src/files.php';
 
 const CONTENT_TYPE_APPLICATION_JSON = "Content-Type: application/json";
 
@@ -15,7 +15,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             }
 
             if (isset($_GET['emoji']) && !empty($_GET['emoji'])) {
-                get_file('emojis/global', $_GET['emoji']);
+                rvc_read_file('emojis/global', $_GET['emoji']);
                 break;
             }
         }
@@ -28,7 +28,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             }
 
             if (isset($_GET['emoji']) && !empty($_GET['emoji'])) {
-                get_file('emojis/server', $_GET['emoji']);
+                rvc_read_file('emojis/server', $_GET['emoji']);
                 break;
             }
         }
@@ -38,7 +38,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
     case 'POST':
         if (isset($_GET['emoji']) && !empty($_GET['emoji'])) {
-            options_file('emojis', $_GET['emojis']);
+            rvc_file_exists('emojis', $_GET['emojis']);
             break;
         }
 
