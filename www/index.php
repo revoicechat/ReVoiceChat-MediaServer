@@ -44,26 +44,12 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
     case 'POST':
         if (isset($_GET['attachements']) && !empty($_GET['attachements'])) {
-            options_file('attachements', $_GET['attachements']);
+            post_attachements_upload($_GET['attachements']);
             break;
         }
 
         if (isset($_GET['profiles']) && !empty($_GET['profiles'])) {
-            if ($_GET['profiles'] == "bulk") {
-                options_file_bulk('profiles', $body);
-            } else {
-                if (preg_match('#^.*/profiles/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$#', $_SERVER['REQUEST_URI'], $matches)) {
-                    $id = $matches[1];
-                    $user = get_current_user_from_auth();
-                    if ($id != $user['id'] && $user['type'] != 'ADMIN') {
-                        echo json_encode(['error' => 'You cannot edit this profile', 'user' => $user]);
-                        http_response_code(401);
-                        break;
-                    }
-                    upload_profile_file($id);
-                    break;
-                }
-            }
+            post_profile_upload($_GET['profiles']);
             break;
         }
 
@@ -88,7 +74,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
 }
 
-exit();
+exit;
 
 function get_file($where, $name)
 {
@@ -97,9 +83,10 @@ function get_file($where, $name)
     if (!file_exists($file)) {
         if ($where == "profiles" && $name != "default-avatar") {
             get_file("profiles", "default-avatar");
+            exit;
         }
         http_response_code(404);
-        exit();
+        exit;
     }
 
     $type = mime_content_type($file);
@@ -108,7 +95,7 @@ function get_file($where, $name)
     header("Content-Type: $type");
     readfile($file);
 
-    exit();
+    exit;
 }
 
 function get_emojis_all()
@@ -119,7 +106,7 @@ function get_emojis_all()
     header(CONTENT_TYPE_APPLICATION_JSON);
     echo json_encode($result);
 
-    exit();
+    exit;
 }
 
 function get_emojis_global_all()
@@ -130,7 +117,7 @@ function get_emojis_global_all()
     header(CONTENT_TYPE_APPLICATION_JSON);
     echo json_encode($list);
 
-    exit();
+    exit;
 }
 
 function options_file($where, $name)
@@ -139,10 +126,10 @@ function options_file($where, $name)
 
     if (file_exists($file)) {
         http_response_code(200);
-        exit();
+        exit;
     } else {
         http_response_code(204);
-        exit();
+        exit;
     }
 }
 
@@ -159,32 +146,46 @@ function options_file_bulk($where, $names)
     header(CONTENT_TYPE_APPLICATION_JSON);
     echo json_encode($result);
 
-    exit();
+    exit;
 }
 
-function upload_profile_file($id)
+function post_profile_upload($id)
 {
-    require_once('src/file_upload.php');
+    if (preg_match('#^.*/profiles/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$#', $_SERVER['REQUEST_URI'], $matches)) {
+        $id = $matches[1];
+        $user = get_current_user_from_auth();
+        if ($id != $user['id'] && $user['type'] != 'ADMIN') {
+            echo json_encode(['error' => 'You cannot edit this profile', 'user' => $user]);
+            http_response_code(401);
+            return;
+        }
 
-    // Define storage path
-    $uploadDir = __DIR__ . '/data/profiles/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true); // create directory if not exists
+        require_once('src/file_upload.php');
+
+        // Define storage path
+        $uploadDir = __DIR__ . '/data/profiles/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true); // create directory if not exists
+        }
+
+        try {
+            // Use the user ID as filename, no extension
+            file_upload('file', $uploadDir . $id);
+        } catch (FileUploadException $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e]);
+            exit;
+        }
+
+        // OK
+        http_response_code(200);
+        echo json_encode(['success' => true, 'path' => 'profiles/' . $id]);
+        exit;
     }
 
-    try {
-        // Use the user ID as filename, no extension
-        file_upload('file', $uploadDir . $id);
-    } catch (RuntimeException $e) {
-        http_response_code(500);
-        echo json_encode(['error' => $e]);
-        return;
-    }
-
-    // OK
-    http_response_code(200);
-    echo json_encode(['success' => true, 'path' => '/data/profiles/' . $id]);
-    return;
+    http_response_code(400);
+    echo json_encode(['error' => 'Bad request']);
+    exit;
 }
 
 function get_current_user_from_auth()
@@ -247,4 +248,26 @@ function get_authorization_header()
     http_response_code(401);
     echo json_encode(['error' => 'Missing Authorization header']);
     exit;
+}
+
+function post_attachements_upload()
+{
+    require_once('src/file_upload.php');
+
+    // Ask Core for attachement id
+    $id = "";
+
+    // Define storage path
+    $uploadDir = __DIR__ . '/data/attachements/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true); // create directory if not exists
+    }
+
+    try {
+        file_upload('file', $uploadDir . $id);
+    } catch (FileUploadException $e) {
+        http_response_code(500);
+        echo json_encode(['error' => $e]);
+        exit;
+    }
 }
