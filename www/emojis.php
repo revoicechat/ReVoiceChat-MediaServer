@@ -28,7 +28,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             }
 
             if (isset($_GET['emoji']) && !empty($_GET["emoji"])) {
-                get_file('emojis/global', $_GET['emojis']);
+                get_file('emojis/server', $_GET['emojis']);
                 break;
             }
         }
