@@ -2,7 +2,7 @@
 
 function get_file($where, $name)
 {
-    $file = __DIR__ . "/data/$where/$name";
+    $file = __DIR__ . "/../data/$where/$name";
 
     if (!file_exists($file)) {
         if ($where == "profiles" && $name != "default-avatar") {
