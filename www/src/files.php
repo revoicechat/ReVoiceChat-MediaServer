@@ -24,7 +24,7 @@ function rvc_read_file($where, $name)
 
 function rvc_file_exists($where, $name)
 {
-    $file = dirname(__FILE__) . "/data/$where/$name";
+    $file = __DIR__ . "/../data/$where/$name";
 
     if (file_exists($file)) {
         http_response_code(200);
@@ -40,7 +40,7 @@ function rvc_multiple_file_exists($where, $names)
     $result = [];
 
     foreach ($names as $name) {
-        $file = dirname(__FILE__) . "/data/$where/$name";
+        $file = __DIR__ . "/../data/$where/$name";
         $result[$name] = file_exists($file);
     }
 
