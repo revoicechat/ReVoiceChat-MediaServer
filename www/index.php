@@ -1,5 +1,5 @@
 <?php
-require_once 'src/file_access.php';
+require_once 'src/files.php';
 
 const CONTENT_TYPE_APPLICATION_JSON = "Content-Type: application/json";
 
@@ -9,12 +9,12 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
 
         if (isset($_GET['attachements']) && !empty($_GET['attachements'])) {
-            get_file('attachements', $_GET['attachements']);
+            rvc_read_file('attachements', $_GET['attachements']);
             break;
         }
 
         if (isset($_GET['profiles']) && !empty($_GET['profiles'])) {
-            get_file('profiles', $_GET['profiles']);
+            rvc_read_file('profiles', $_GET['profiles']);
             break;
         }
 

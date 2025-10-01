@@ -1,12 +1,12 @@
 <?php
 
-function get_file($where, $name)
+function rvc_read_file($where, $name)
 {
     $file = __DIR__ . "/../data/$where/$name";
 
     if (!file_exists($file)) {
         if ($where == "profiles" && $name != "default-avatar") {
-            get_file("profiles", "default-avatar");
+            rvc_read_file("profiles", "default-avatar");
             exit;
         }
         http_response_code(404);
@@ -22,7 +22,7 @@ function get_file($where, $name)
     exit;
 }
 
-function options_file($where, $name)
+function rvc_file_exists($where, $name)
 {
     $file = dirname(__FILE__) . "/data/$where/$name";
 
@@ -35,7 +35,7 @@ function options_file($where, $name)
     }
 }
 
-function options_file_bulk($where, $names)
+function rvc_multiple_file_exists($where, $names)
 {
     $result = [];
 
