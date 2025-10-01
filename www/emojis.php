@@ -37,7 +37,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
 
     case 'POST':
-        if (!empty($_GET['emojis'])) {
+        if (isset($_GET['emoji']) && !empty($_GET['emoji'])) {
             options_file('emojis', $_GET['emojis']);
             break;
         }
