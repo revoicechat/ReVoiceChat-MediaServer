@@ -27,12 +27,11 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 break;
             }
 
-            if (isset($_GET['emoji']) && !empty($_GET["emoji"])) {
+            if (isset($_GET['emoji']) && !empty($_GET['emoji'])) {
                 get_file('emojis/server', $_GET['emojis']);
                 break;
             }
         }
-
 
         http_response_code(400);
         break;
@@ -47,6 +46,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             post_emoji_upload('emojis', $body);
             break;
         }
+
         http_response_code(400);
         break;
 
