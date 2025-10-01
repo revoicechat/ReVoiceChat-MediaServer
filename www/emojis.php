@@ -78,35 +78,6 @@ function get_emojis_all($where)
     exit;
 }
 
-function options_file($where, $name)
-{
-    $file = __DIR__ . "/data/$where/$name";
-
-    if (file_exists($file)) {
-        http_response_code(200);
-        exit;
-    } else {
-        http_response_code(204);
-        exit;
-    }
-}
-
-function options_file_bulk($where, $names)
-{
-    $result = [];
-
-    foreach ($names as $name) {
-        $file = __DIR__ . "/data/$where/$name";
-        $result[$name] = file_exists($file);
-    }
-
-    http_response_code(200);
-    header(CONTENT_TYPE_APPLICATION_JSON);
-    echo json_encode($result);
-
-    exit;
-}
-
 function post_emoji_upload()
 {
     require_once('src/file_upload.php');
