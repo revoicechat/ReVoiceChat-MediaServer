@@ -7,6 +7,12 @@ $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
+        // Emojis Any
+        if (isset($_GET['any']) && isset($_GET['emoji']) && !empty($_GET['emoji'])) {
+            get_emoji_any($_GET['emoji']);
+            break;
+        }
+
         // Emojis global
         if (isset($_GET['global'])) {
             if (isset($_GET['all'])) {
@@ -61,10 +67,34 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
 exit;
 
+function get_emoji_any($name)
+{
+    $rootDir = __DIR__ . "/data/emojis";
+
+    $dirContent = scandir($rootDir);
+    foreach ($dirContent as $element) {
+        if(!is_dir("$rootDir/$element")){
+            continue;
+        }
+
+        if($element == "." || $element == ".."){
+            continue;
+        }
+
+        if(is_file("$rootDir/$element/$name")){
+            rvc_read_file("emojis/$element", $name);
+            exit;
+        }
+    }
+
+    http_response_code(404);
+    exit;
+}
+
 function get_emojis_all($where)
 {
     $workingDirectory = __DIR__ . "/data/emojis/$where/";
-    if(!is_dir($workingDirectory)){
+    if (!is_dir($workingDirectory)) {
         http_response_code(404);
         exit;
     }
