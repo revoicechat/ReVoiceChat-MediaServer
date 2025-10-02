@@ -73,11 +73,7 @@ function get_emoji_any($name)
 
     $dirContent = scandir($rootDir);
     foreach ($dirContent as $element) {
-        if(!is_dir("$rootDir/$element")){
-            continue;
-        }
-
-        if($element == "." || $element == ".."){
+        if(!is_dir("$rootDir/$element") || $element == "." || $element == ".."){
             continue;
         }
 
