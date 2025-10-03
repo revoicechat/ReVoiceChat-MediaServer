@@ -50,7 +50,7 @@ exit;
 
 function post_profile_upload($id)
 {
-    if (url_with_id($_SERVER['REQUEST_URI'], $matches)) {
+    if (url_with_id("profiles", $matches)) {
         $id = $matches[1];
         $user = get_current_user_from_auth();
         if ($id != $user['id'] && $user['type'] != 'ADMIN') {
