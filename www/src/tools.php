@@ -7,7 +7,7 @@ function url_with_id($type, &$matches) {
 
 function get_current_user_from_auth()
 {
-    $settings = parse_ini_file(__DIR__ . '/settings.ini', true);
+    $settings = parse_ini_file(__DIR__ . '/../settings.ini', true);
     $authHeader = get_authorization_header();
     $url = $settings['api']['user_me_url'];
     $ch = curl_init($url);
