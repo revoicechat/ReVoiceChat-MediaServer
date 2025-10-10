@@ -8,33 +8,20 @@ $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_
 switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
         // Emojis Any
-        if (isset($_GET['any']) && isset($_GET['emoji']) && !empty($_GET['emoji'])) {
-            get_emoji_any($_GET['emoji']);
+        if (isset($_GET['any']) && isset($_GET['id']) && !empty($_GET['id'])) {
+            get_emoji_any($_GET['id']);
             break;
         }
 
-        // Emojis global
+        // Emojis global only
         if (isset($_GET['global'])) {
             if (isset($_GET['all'])) {
                 get_emojis_all('global');
                 break;
             }
 
-            if (isset($_GET['emoji']) && !empty($_GET['emoji'])) {
-                rvc_read_file('emojis/global', $_GET['emoji']);
-                break;
-            }
-        }
-
-        // Emojis server
-        if (isset($_GET['server']) && !empty($_GET['server'])) {
-            if (isset($_GET['all'])) {
-                get_emojis_all($_GET['server']);
-                break;
-            }
-
-            if (isset($_GET['emoji']) && !empty($_GET['emoji'])) {
-                rvc_read_file('emojis/server', $_GET['emoji']);
+            if (isset($_GET['id']) && !empty($_GET['id'])) {
+                rvc_read_file('emojis/global', $_GET['id']);
                 break;
             }
         }
@@ -43,13 +30,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
 
     case 'POST':
-        if (isset($_GET['emoji']) && !empty($_GET['emoji'])) {
-            rvc_file_exists('emojis', $_GET['emojis']);
-            break;
-        }
-
-        if (isset($_GET['upload'])) {
-            post_emoji_upload('emojis', $body);
+        if (isset($_GET['any']) && isset($_GET['id'])) {
+            post_emoji_upload($_GET['id']);
             break;
         }
 
@@ -73,11 +55,11 @@ function get_emoji_any($name)
 
     $dirContent = scandir($rootDir);
     foreach ($dirContent as $element) {
-        if(!is_dir("$rootDir/$element") || $element == "." || $element == ".."){
+        if (!is_dir("$rootDir/$element") || $element == "." || $element == "..") {
             continue;
         }
 
-        if(is_file("$rootDir/$element/$name")){
+        if (is_file("$rootDir/$element/$name")) {
             rvc_read_file("emojis/$element", $name);
             exit;
         }
@@ -104,15 +86,12 @@ function get_emojis_all($where)
     exit;
 }
 
-function post_emoji_upload()
+function post_emoji_upload($id)
 {
     require_once('src/file_upload.php');
 
-    // Ask Core for attachement id
-    $id = "";
-
     // Define storage path
-    $uploadDir = __DIR__ . "/data/emojis/$serverId/";
+    $uploadDir = __DIR__ . "/data/emojis/";
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0755, true); // create directory if not exists
     }
@@ -124,4 +103,8 @@ function post_emoji_upload()
         echo json_encode(['error' => $e]);
         exit;
     }
+
+    http_response_code(200);
+    echo json_encode(['success' => true, 'path' => 'emojis/' . $id]);
+    exit;
 }
