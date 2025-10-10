@@ -10,6 +10,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
         if(isset($_GET['maxfilesize'])){
             require_once 'src/file_upload.php';
+            header(CONTENT_TYPE_APPLICATION_JSON);
             echo json_encode(['maxFileSize' => file_upload_max_size()]);
             break;
         }
