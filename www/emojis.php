@@ -53,16 +53,16 @@ function get_emoji_any($name)
 {
     $rootDir = __DIR__ . "/data/emojis";
 
-    $dirContent = scandir($rootDir);
-    foreach ($dirContent as $element) {
-        if (!is_dir("$rootDir/$element") || $element == "." || $element == "..") {
-            continue;
-        }
+    // Global
+    if (is_file("$rootDir/global/$name")) {
+        rvc_read_file("emojis/global", $name);
+        exit;
+    }
 
-        if (is_file("$rootDir/$element/$name")) {
-            rvc_read_file("emojis/$element", $name);
-            exit;
-        }
+    // Any
+    if (is_file("$rootDir/$name")) {
+        rvc_read_file("emojis/", $name);
+        exit;
     }
 
     http_response_code(404);
