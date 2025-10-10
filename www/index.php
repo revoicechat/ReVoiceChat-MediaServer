@@ -73,6 +73,7 @@ function post_profile_upload($id)
             // Use the user ID as filename, no extension
             file_upload('file', $uploadDir . $id);
         } catch (FileUploadException $e) {
+            error_log($e);
             http_response_code(500);
             echo json_encode(['error' => $e]);
             exit;
@@ -102,6 +103,7 @@ function post_attachment_upload($id)
     try {
         file_upload('file', $uploadDir . $id);
     } catch (FileUploadException $e) {
+        error_log($e);
         http_response_code(500);
         echo json_encode(['error' => $e]);
         exit;
