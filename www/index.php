@@ -18,6 +18,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             break;
         }
 
+        error_log("Invalid endpoint " . $_SERVER['PATH_INFO'] . " Method " . $_SERVER["REQUEST_METHOD"]);
         http_response_code(400);
         break;
 
@@ -32,6 +33,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             break;
         }
 
+        error_log("Invalid endpoint " . $_SERVER['PATH_INFO'] . " Method " . $_SERVER["REQUEST_METHOD"]);
         http_response_code(400);
         break;
 
@@ -40,6 +42,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         http_response_code(400);
         break;
     default:
+        error_log("Invalid endpoint " . $_SERVER['PATH_INFO'] . " Method " . $_SERVER["REQUEST_METHOD"]);
         http_response_code(405);
         break;
 }
