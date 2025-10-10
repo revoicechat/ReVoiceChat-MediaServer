@@ -8,9 +8,8 @@ $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
-
-        if (isset($_GET['attachements']) && !empty($_GET['attachements'])) {
-            rvc_read_file('attachements', $_GET['attachements']);
+        if (isset($_GET['attachment']) && !empty($_GET['attachment'])) {
+            rvc_read_file('attachment', $_GET['attachment']);
             break;
         }
 
@@ -23,8 +22,8 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
 
     case 'POST':
-        if (isset($_GET['attachements']) && !empty($_GET['attachements'])) {
-            post_attachements_upload($_GET['attachements']);
+        if (isset($_GET['attachment']) && !empty($_GET['attachment'])) {
+            post_attachment_upload($_GET['attachment']);
             break;
         }
 
@@ -87,7 +86,7 @@ function post_profile_upload($id)
     exit;
 }
 
-function post_attachements_upload()
+function post_attachment_upload()
 {
     require_once('src/file_upload.php');
 
