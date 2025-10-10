@@ -2,13 +2,13 @@
 test*
 
 # Stored files
-attachements/
+attachments/
 profiles/
 emojis/
 emojis/global/
 
-# Default files
-!attachements/.keep
+#  Keep files
+!attachments/.keep
 !profiles/default-avatar
 !profiles/.keep
 !emojis/.keep
@@ -16,7 +16,7 @@ emojis/global/
 www/settings.ini
 
 # Logo
-!attachements/logo
+!attachments/logo
 
 ### IntelliJ IDEA ###
 .idea
