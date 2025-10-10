@@ -95,7 +95,7 @@ function post_attachment_upload($id)
     require_once('src/file_upload.php');
 
     // Define storage path
-    $uploadDir = __DIR__ . '/data/attachements/';
+    $uploadDir = __DIR__ . '/data/attachments/';
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0755, true); // create directory if not exists
     }
