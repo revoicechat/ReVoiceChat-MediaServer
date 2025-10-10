@@ -89,12 +89,9 @@ function post_profile_upload($id)
     exit;
 }
 
-function post_attachment_upload()
+function post_attachment_upload($id)
 {
     require_once('src/file_upload.php');
-
-    // Ask Core for attachement id
-    $id = "";
 
     // Define storage path
     $uploadDir = __DIR__ . '/data/attachements/';
