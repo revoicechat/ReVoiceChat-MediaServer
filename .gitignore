@@ -2,18 +2,18 @@
 test*
 
 # Stored files
-attachments/*
-profiles/*
-emojis/*
-emojis/global/*
+www/data/attachments/*
+www/data/profiles/*
+www/data/emojis/*
+www/data/emojis/global/*
 
 #  Keep files
-!attachments/.keep
-!attachments/logo
-!profiles/default-avatar
-!profiles/.keep
-!emojis/.keep
-!emojis/global/.keep
+!www/data/attachments/.keep
+!www/data/attachments/logo
+!www/data/profiles/default-avatar
+!www/data/profiles/.keep
+!www/data/emojis/.keep
+!www/data/emojis/global/.keep
 
 # Settings
 www/settings.ini
