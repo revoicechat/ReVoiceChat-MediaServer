@@ -8,6 +8,12 @@ $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
+        if(isset($_GET['maxfilesize'])){
+            require_once 'src/file_upload.php';
+            echo json_encode(['maxFileSize' => file_upload_max_size()]);
+            break;
+        }
+
         if (isset($_GET['attachment']) && !empty($_GET['attachment'])) {
             rvc_read_file('attachments', $_GET['attachment']);
             break;
