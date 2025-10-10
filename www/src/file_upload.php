@@ -37,46 +37,6 @@ function file_upload(string $file_field, string $destination)
         throw new FileUploadException("The file size exceeds the maximum allowed size (Limit: MAX_FILE_SIZE_HUMAN)");
     }
 
-    // Check MIME
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    if (false === $mime_extension = array_search(
-        $finfo->file($_FILES[$file_field]['tmp_name']),
-        array(
-            'jpg'  => 'image/jpeg',
-            'png'  => 'image/png',
-            'gif'  => 'image/gif',
-            'pdf'  => 'application/pdf',
-            'csv'  => 'text/csv',
-            'txt'  => 'text/plain',
-            'zip'  => 'application/zip',
-            'doc'  => 'application/msword',
-            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-            'xls'  => 'application/vnd.ms-excel',
-            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-        ),
-        true
-    )) {
-        throw new FileUploadException('Unsupported file format');
-    }
-
-    // Double check MIME for dotx/docx and xltx/xlsx
-    if ($mime_extension == 'docx' || $mime_extension == 'xlsx') {
-        if (false === $mime_extension = array_search(
-            $_FILES[$file_field]['type'],
-            array(
-                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-            ),
-            true
-        )) {
-            throw new FileUploadException('Unsupported file format');
-        }
-    }
-
     // Move to directory
     if (!move_uploaded_file($_FILES[$file_field]['tmp_name'], "$destination")) {
         throw new FileUploadException('Unable to move the file.');
