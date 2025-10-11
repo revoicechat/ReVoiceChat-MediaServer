@@ -1,6 +1,6 @@
 <?php
 
-function rvc_read_file($where, $name)
+function rvc_read_file(string $where, string $name)
 {
     $file = __DIR__ . "/../data/$where/$name";
 
@@ -22,7 +22,7 @@ function rvc_read_file($where, $name)
     exit;
 }
 
-function rvc_file_exists($where, $name)
+function rvc_file_exists(string $where, string $name)
 {
     $file = __DIR__ . "/../data/$where/$name";
 
@@ -35,7 +35,7 @@ function rvc_file_exists($where, $name)
     }
 }
 
-function rvc_multiple_file_exists($where, $names)
+function rvc_multiple_file_exists(string $where, iterable|object $names)
 {
     $result = [];
 

@@ -1,20 +1,45 @@
 <?php
 
-function url_with_id($type, &$matches) {
-  return preg_match('#^.*/' . $type . '/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$#', $_SERVER['REQUEST_URI'], $matches);
+function url_with_id($type, &$matches)
+{
+    return preg_match('#^.*/' . $type . '/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$#', $_SERVER['REQUEST_URI'], $matches);
 }
 
 
-function get_current_user_from_auth()
+function authorization_header()
 {
-    $settings = parse_ini_file(__DIR__ . '/../settings.ini', true);
-    $authHeader = get_authorization_header();
-    $url = $settings['api']['user_me_url'];
+    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        return $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        return $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    }
+    if (function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+        if (isset($headers['Authorization'])) {
+            return $headers['Authorization'];
+        }
+    }
+    http_response_code(401);
+    echo json_encode(['error' => 'Missing Authorization header']);
+    exit;
+}
+
+function curl_core(string $url, $data = null)
+{
     $ch = curl_init($url);
+
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: $authHeader"
+        "Authorization: " . authorization_header()
     ]);
+
+    // Data available ?
+    if(!empty($data)){
+        $payload = json_encode($data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+    }
 
     $response = curl_exec($ch);
 
@@ -34,35 +59,29 @@ function get_current_user_from_auth()
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    if ($httpCode != 200) {
-        http_response_code(401);
-        echo json_encode(
-            [
-                'error' => $response,
-                'code' => $httpCode
-            ]
-        );
-        exit;
+    if ($httpCode == 200) {
+        return json_decode($response, true); // return parsed user JSON
     }
 
-    return json_decode($response, true); // return parsed user JSON
+    http_response_code($httpCode);
+    echo json_encode(
+        [
+            'error' => $response,
+            'code' => $httpCode
+        ]
+    );
+    exit;
 }
 
-function get_authorization_header()
+function get_current_user_from_auth()
 {
-    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
-        return $_SERVER['HTTP_AUTHORIZATION'];
-    }
-    if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
-        return $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
-    }
-    if (function_exists('apache_request_headers')) {
-        $headers = apache_request_headers();
-        if (isset($headers['Authorization'])) {
-            return $headers['Authorization'];
-        }
-    }
-    http_response_code(401);
-    echo json_encode(['error' => 'Missing Authorization header']);
-    exit;
+    $settings = parse_ini_file(__DIR__ . '/../settings.ini', true);
+    $url = $settings['api']['user_me_url'];
+    return curl_core($url);
+}
+
+function attachment_update_status(string $id, string $status){
+    $settings = parse_ini_file(__DIR__ . '/../settings.ini', true);
+    $url = $settings['api']['media_url'] . "/$id";
+    curl_core($url, $status);
 }

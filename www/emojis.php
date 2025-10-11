@@ -48,7 +48,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 
 exit;
 
-function get_emoji_any($name)
+function get_emoji_any(string $name)
 {
     $rootDir = __DIR__ . "/data/emojis";
 
@@ -68,7 +68,7 @@ function get_emoji_any($name)
     exit;
 }
 
-function get_emojis_all($where)
+function get_emojis_all(string $where)
 {
     $workingDirectory = __DIR__ . "/data/emojis/$where/";
     if (!is_dir($workingDirectory)) {
@@ -85,7 +85,7 @@ function get_emojis_all($where)
     exit;
 }
 
-function post_emoji_upload($id)
+function post_emoji_upload(string $id)
 {
     require_once('src/file_upload.php');
 
