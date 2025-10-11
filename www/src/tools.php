@@ -35,10 +35,10 @@ function curl_core(string $url, $data = null)
     ]);
 
     // Data available ?
-    if(!empty($data)){
-        $payload = json_encode($data);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+    if (!empty($data)) {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
     }
 
     $response = curl_exec($ch);
@@ -66,7 +66,7 @@ function curl_core(string $url, $data = null)
         return json_decode($response, true); // return parsed user JSON
     }
 
-    error_log("cURL request not OK: $response, $httpCode");
+    error_log("cURL request not OK: $url, " . print_r($data, true) . ", $response, $httpCode");
     http_response_code($httpCode);
     echo json_encode(
         [
@@ -84,7 +84,8 @@ function get_current_user_from_auth()
     return curl_core($url);
 }
 
-function attachment_update_status(string $id, string $status){
+function attachment_update_status(string $id, string $status)
+{
     $settings = parse_ini_file(__DIR__ . '/../settings.ini', true);
     $url = $settings['api']['media_url'] . "/$id";
     curl_core($url, $status);
