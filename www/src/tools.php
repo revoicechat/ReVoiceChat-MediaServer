@@ -26,23 +26,28 @@ function authorization_header()
     exit;
 }
 
-function curl_core(string $url, $data = null)
+function curl_core(string $url, $data = null, $method = null)
 {
     $ch = curl_init($url);
-    $header = authorization_header();
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
-
+    curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: $header"
-    ]);
+
+    // Method is set
+    if(!empty($method)){
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+    }
 
     // Data available ?
     if (!empty($data)) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization:" . authorization_header(), 'accept: application/json', 'Content-Type:application/json']);
+    }
+    else{
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization:" . authorization_header()
+        ]);
     }
 
     $response = curl_exec($ch);
@@ -67,10 +72,12 @@ function curl_core(string $url, $data = null)
     curl_close($ch);
 
     if ($httpCode == 200) {
-        return json_decode($response, true); // return parsed user JSON
+        return json_decode($response, true);
     }
 
-    error_log("cURL request not OK,\nHeader: $header\nResponse: $response,\nHTTP Code: $httpCode,\n cURL info:" . print_r(curl_getinfo($ch), true));
+    error_log("cURL request not OK,\nResponse: $response,\nHTTP Code: $httpCode");
+    error_log("cURL Info:" . print_r(curl_getinfo($ch), true));
+
     http_response_code($httpCode);
     echo json_encode(
         [
@@ -92,5 +99,5 @@ function attachment_update_status(string $id, string $status)
 {
     $settings = parse_ini_file(__DIR__ . '/../settings.ini', true);
     $url = $settings['api']['media_url'] . "/$id";
-    curl_core($url, $status);
+    curl_core($url, $status, "PATCH");
 }
