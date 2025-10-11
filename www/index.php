@@ -25,7 +25,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             break;
         }
 
-        error_log("Invalid endpoint " . $_SERVER['PATH_INFO'] . " Method " . $_SERVER["REQUEST_METHOD"]);
+        error_log("Invalid endpoint " . $_SERVER['REQUEST_URI'] . " Method " . $_SERVER["REQUEST_METHOD"]);
         http_response_code(400);
         break;
 
@@ -40,16 +40,12 @@ switch ($_SERVER["REQUEST_METHOD"]) {
             break;
         }
 
-        error_log("Invalid endpoint " . $_SERVER['PATH_INFO'] . " Method " . $_SERVER["REQUEST_METHOD"]);
+        error_log("Invalid endpoint " . $_SERVER['REQUEST_URI'] . " Method " . $_SERVER["REQUEST_METHOD"]);
         http_response_code(400);
         break;
 
-    case 'DELETE':
-
-        http_response_code(400);
-        break;
     default:
-        error_log("Invalid endpoint " . $_SERVER['PATH_INFO'] . " Method " . $_SERVER["REQUEST_METHOD"]);
+        error_log("Invalid endpoint " . $_SERVER['REQUEST_URI'] . " Method " . $_SERVER["REQUEST_METHOD"]);
         http_response_code(405);
         break;
 }
@@ -109,6 +105,7 @@ function post_attachment_upload($id)
 
     try {
         file_upload('file', $uploadDir . $id);
+        
     } catch (FileUploadException $e) {
         error_log($e);
         http_response_code(500);
