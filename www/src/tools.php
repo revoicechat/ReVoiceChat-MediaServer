@@ -20,6 +20,7 @@ function authorization_header()
             return $headers['Authorization'];
         }
     }
+    error_log("Missing Authorization Header");
     http_response_code(401);
     echo json_encode(['error' => 'Missing Authorization header']);
     exit;
@@ -28,12 +29,13 @@ function authorization_header()
 function curl_core(string $url, $data = null)
 {
     $ch = curl_init($url);
+    $header = authorization_header();
 
     curl_setopt($ch, CURLOPT_VERBOSE, true);
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: " . authorization_header()
+        "Authorization: $header"
     ]);
 
     // Data available ?
@@ -68,7 +70,7 @@ function curl_core(string $url, $data = null)
         return json_decode($response, true); // return parsed user JSON
     }
 
-    error_log("cURL request not OK,\nResponse: $response,\nHTTP Code: $httpCode,\n cURL info:" . print_r(curl_getinfo($ch), true));
+    error_log("cURL request not OK,\nHeader: $header\nResponse: $response,\nHTTP Code: $httpCode,\n cURL info:" . print_r(curl_getinfo($ch), true));
     http_response_code($httpCode);
     echo json_encode(
         [
