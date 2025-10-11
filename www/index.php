@@ -53,7 +53,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
 exit;
 
 
-function post_profile_upload($id)
+function post_profile_upload(string $id)
 {
     if (url_with_id("profiles", $matches)) {
         $id = $matches[1];
@@ -93,7 +93,7 @@ function post_profile_upload($id)
     exit;
 }
 
-function post_attachment_upload($id)
+function post_attachment_upload(string $id)
 {
     require_once('src/file_upload.php');
 
@@ -104,9 +104,16 @@ function post_attachment_upload($id)
     }
 
     try {
+        // Download file
         file_upload('file', $uploadDir . $id);
         
+        // Tell core we received it
+        attachment_update_status($id, "STORED");
+        
     } catch (FileUploadException $e) {
+        // Tell core something went wrong
+        attachment_update_status($id, "CORRUPT");
+
         error_log($e);
         http_response_code(500);
         echo json_encode(['error' => $e]);
