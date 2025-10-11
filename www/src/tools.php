@@ -66,7 +66,7 @@ function curl_core(string $url, $data = null)
         return json_decode($response, true); // return parsed user JSON
     }
 
-    error_log("cURL request not OK: $url,\n" . print_r($data, true) . ",\n$response,\n$httpCode");
+    error_log("cURL request not OK\n,URL: $url,\nData: " . print_r($data, true) . ",\nResponse: $response,\nHTTP Code: $httpCode");
     http_response_code($httpCode);
     echo json_encode(
         [
