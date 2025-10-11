@@ -29,6 +29,8 @@ function curl_core(string $url, $data = null)
 {
     $ch = curl_init($url);
 
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
+
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Authorization: " . authorization_header()
@@ -37,7 +39,7 @@ function curl_core(string $url, $data = null)
     // Data available ?
     if (!empty($data)) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
     }
 
@@ -66,7 +68,7 @@ function curl_core(string $url, $data = null)
         return json_decode($response, true); // return parsed user JSON
     }
 
-    error_log("cURL request not OK\n,URL: $url,\nData: " . print_r($data, true) . ",\nResponse: $response,\nHTTP Code: $httpCode");
+    error_log("cURL request not OK,\nResponse: $response,\nHTTP Code: $httpCode,\n cURL info:" . curl_getinfo($ch));
     http_response_code($httpCode);
     echo json_encode(
         [
