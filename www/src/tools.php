@@ -30,8 +30,6 @@ function curl_core(string $url, $data = null, $method = null)
 {
     $ch = curl_init($url);
 
-    curl_setopt($ch, CURLOPT_VERBOSE, true);
-    curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     // Method is set
@@ -42,7 +40,10 @@ function curl_core(string $url, $data = null, $method = null)
     // Data available ?
     if (!empty($data)) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization:" . authorization_header(), 'accept: application/json', 'Content-Type:application/json']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization:" . authorization_header(), 
+            "Content-Type:application/json"
+        ]);
     }
     else{
         curl_setopt($ch, CURLOPT_HTTPHEADER, [

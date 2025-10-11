@@ -58,6 +58,7 @@ function post_profile_upload(string $id)
     if (url_with_id("profiles", $matches)) {
         $id = $matches[1];
         $user = get_current_user_from_auth();
+
         if ($id != $user['id'] && $user['type'] != 'ADMIN') {
             echo json_encode(['error' => 'You cannot edit this profile', 'user' => $user]);
             http_response_code(401);
