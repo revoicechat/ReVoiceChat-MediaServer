@@ -48,6 +48,9 @@ function curl_core(string $url, $data = null)
         $errno = curl_errno($ch);
         curl_close($ch);
         http_response_code(500);
+
+        error_log("cURL request failed: $error, $errno");
+
         echo json_encode([
             'error' => 'cURL request failed',
             'curl_error' => $error,
@@ -63,6 +66,7 @@ function curl_core(string $url, $data = null)
         return json_decode($response, true); // return parsed user JSON
     }
 
+    error_log("cURL request not OK: $response, $httpCode");
     http_response_code($httpCode);
     echo json_encode(
         [
