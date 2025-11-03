@@ -1,5 +1,6 @@
 <?php
 require_once 'src/files.php';
+require_once 'src/tools.php';
 
 const CONTENT_TYPE_APPLICATION_JSON = "Content-Type: application/json";
 
@@ -97,7 +98,12 @@ function post_emoji_upload(string $id)
 
     try {
         file_upload('file', $uploadDir . $id);
+        // Tell core we received it
+        attachment_update_status($id, "STORED");
     } catch (FileUploadException $e) {
+        // Tell core something went wrong
+        attachment_update_status($id, "CORRUPT");
+
         http_response_code(500);
         echo json_encode(['error' => $e]);
         exit;
