@@ -8,11 +8,11 @@ RewriteRule ^media/attachments/([0-9A-Za-z-]+)$ index.php?attachment=$1 [L]
 RewriteRule ^media/profiles/([0-9A-Za-z-]+)$ index.php?profiles=$1 [L]
 
 # Emotes Any
-RewriteRule ^media/emotes/([0-9A-Za-z-.]*)$ emotes.php?any&id=$1 [L]
+RewriteRule ^media/emote/([0-9A-Za-z-.]*)$ emote.php?any&id=$1 [L]
 
 # Emotes global
-RewriteRule ^media/emotes/global/all emotes.php?global&all [L]
-RewriteRule ^media/emotes/global/([0-9A-Za-z-.]*)$ emotes.php?global&id=$1 [L]
+RewriteRule ^media/emote/global/all emote.php?global&all [L]
+RewriteRule ^media/emote/global/([0-9A-Za-z-.]*)$ emote.php?global&id=$1 [L]
 
 # Other
 RewriteRule ^media/([0-9A-Za-z-.]*)$ index.php?$1 [L]
