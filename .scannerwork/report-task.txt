@@ -1,0 +1,6 @@
+projectKey=ReVoiceChat-MediaServer
+serverUrl=http://localhost:9000
+serverVersion=25.9.0.112764
+dashboardUrl=http://localhost:9000/dashboard?id=ReVoiceChat-MediaServer
+ceTaskId=9c371785-6aa8-43b0-9ee5-9d32064d6d04
+ceTaskUrl=http://localhost:9000/api/ce/task?id=9c371785-6aa8-43b0-9ee5-9d32064d6d04
