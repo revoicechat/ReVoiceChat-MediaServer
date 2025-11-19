@@ -104,7 +104,7 @@ function post_emoji_upload(string $id)
         if (in_array(exif_imagetype($file), SUPPORTED_IMAGETYPE)) {
             $image = new SimpleImage();
             $image->load($file);
-            $image->resizeToHeight(100);
+            $image->resizeToHeight(64);
             $image->save($file);
         }
 
