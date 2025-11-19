@@ -2,7 +2,7 @@
 
 ## Install Apache2 and PHP
 ```sh
-sudo apt-get install apache2-utils apache2 php libapache2-mod-php php-json php-zip php-curl -y
+sudo apt-get install apache2-utils apache2 php libapache2-mod-php php-json php-zip php-curl php-gd -y
 ```
 
 ```sh
