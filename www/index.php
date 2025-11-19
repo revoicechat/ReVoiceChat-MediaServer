@@ -75,7 +75,7 @@ function post_profile_upload(string $id)
 
         try {
             // Use the user ID as filename, no extension
-            file_upload('file', $uploadDir . $id);
+            file_upload('file', $uploadDir, $id);
         } catch (FileUploadException $e) {
             error_log($e);
             http_response_code(500);
@@ -106,7 +106,7 @@ function post_attachment_upload(string $id)
 
     try {
         // Download file
-        file_upload('file', $uploadDir . $id);
+        file_upload('file', $uploadDir, $id);
         
         // Tell core we received it
         attachment_update_status($id, "STORED");

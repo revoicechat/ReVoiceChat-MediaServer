@@ -1,5 +1,7 @@
 <?php
 
+require_once "simple_image.php";
+
 /**
  * Manages upload and copy of files uploaded
  * @param string $file_field File field name
@@ -7,12 +9,14 @@
  * @return true|FileUploadException True on OK | FileUploadException
  */
 
-class FileUploadException extends RuntimeException{}
+class FileUploadException extends RuntimeException {}
 
-function file_upload(string $file_field, string $destination)
+function file_upload(string $file_field, string $directory, string $id)
 {
     define('MAX_FILE_SIZE', file_upload_max_size());
     define('MAX_FILE_SIZE_HUMAN', human_file_size(MAX_FILE_SIZE));
+    $destination = $directory . $id;
+    $destination_thumbnail = $directory . "thumbnail/" . $id;
 
     // If this request falls under any of them, treat it invalid.
     if (!isset($_FILES[$file_field]['error']) || is_array($_FILES[$file_field]['error'])) {
@@ -37,9 +41,20 @@ function file_upload(string $file_field, string $destination)
         throw new FileUploadException("The file size exceeds the maximum allowed size (Limit: MAX_FILE_SIZE_HUMAN)");
     }
 
-    // Move to directory
+    // Move original to directory
     if (!move_uploaded_file($_FILES[$file_field]['tmp_name'], "$destination")) {
         throw new FileUploadException('Unable to move the file.');
+    }
+
+    // Make a thumbnail for images
+    $supported_format = [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG];
+    $exif_format = exif_imagetype($destination);
+
+    if(in_array($exif_format, $supported_format)){
+        $image = new SimpleImage();
+        $image->load($destination);
+        $image->resizeToHeight(250);
+        $image->save($destination_thumbnail);
     }
 
     return true;
