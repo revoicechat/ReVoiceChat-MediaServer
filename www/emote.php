@@ -3,6 +3,7 @@ require_once 'src/files.php';
 require_once 'src/tools.php';
 
 const CONTENT_TYPE_APPLICATION_JSON = "Content-Type: application/json";
+const SUPPORTED_IMAGETYPE = [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG];
 
 $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_ARRAY);
 
@@ -97,7 +98,16 @@ function post_emoji_upload(string $id)
     }
 
     try {
-        file_upload('file', $uploadDir . $id);
+        $file = file_upload('file', $uploadDir, $id);
+
+        // Resize image
+        if (in_array(exif_imagetype($file), SUPPORTED_IMAGETYPE)) {
+            $image = new SimpleImage();
+            $image->load($file);
+            $image->resizeToHeight(100);
+            $image->save($file);
+        }
+
         // Tell core we received it
         attachment_update_status($id, "STORED");
     } catch (FileUploadException $e) {
