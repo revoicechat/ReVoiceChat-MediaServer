@@ -22,6 +22,30 @@ function rvc_read_file(string $where, string $name)
     exit;
 }
 
+function rvc_download_file(string $where, string $name)
+{
+    require_once "tools.php";
+
+    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
+    $file = __DIR__ . "/../data/$where/$name";
+
+    if (!file_exists($file)) {
+        http_response_code(404);
+        exit;
+    }
+
+    $url = $settings['api']['media_url'] . "/$name";
+
+    error_log($url);
+
+    $core_info = curl_core($url);
+
+    header('Content-Disposition: attachment; filename="' . $core_info['name'] . '"');
+    readfile($file);
+
+    exit;
+}
+
 function rvc_file_exists(string $where, string $name)
 {
     $file = __DIR__ . "/../data/$where/$name";

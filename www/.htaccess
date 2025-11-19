@@ -4,7 +4,7 @@ RewriteCond %{REQUEST_URI} !\.php$
 # Attachements
 RewriteRule ^media/attachments/([0-9A-Za-z-]*)$ index.php?attachment=$1 [L]
 RewriteRule ^media/attachments/([0-9A-Za-z-]*)/thumbnail$ index.php?attachment=$1&thumbnail [L]
-
+RewriteRule ^media/attachments/([0-9A-Za-z-]*)/download$ index.php?attachment=$1&download [L]
 
 # Profiles
 RewriteRule ^media/profiles/([0-9A-Za-z-]*)$ index.php?profiles=$1 [L]
