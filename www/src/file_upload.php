@@ -16,7 +16,6 @@ function file_upload(string $file_field, string $directory, string $id)
     define('MAX_FILE_SIZE', file_upload_max_size());
     define('MAX_FILE_SIZE_HUMAN', human_file_size(MAX_FILE_SIZE));
     $destination = $directory . $id;
-    $destination_thumbnail = $directory . "thumbnail/" . $id;
 
     // If this request falls under any of them, treat it invalid.
     if (!isset($_FILES[$file_field]['error']) || is_array($_FILES[$file_field]['error'])) {
@@ -46,18 +45,7 @@ function file_upload(string $file_field, string $directory, string $id)
         throw new FileUploadException('Unable to move the file.');
     }
 
-    // Make a thumbnail for images
-    $supported_format = [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG];
-    $exif_format = exif_imagetype($destination);
-
-    if(in_array($exif_format, $supported_format)){
-        $image = new SimpleImage();
-        $image->load($destination);
-        $image->resizeToHeight(250);
-        $image->save($destination_thumbnail);
-    }
-
-    return true;
+    return $destination;
 }
 
 function parse_size($size)

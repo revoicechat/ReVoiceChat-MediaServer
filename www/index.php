@@ -8,7 +8,7 @@ $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_
 
 switch ($_SERVER["REQUEST_METHOD"]) {
     case 'GET':
-        if(isset($_GET['maxfilesize'])){
+        if (isset($_GET['maxfilesize'])) {
             require_once 'src/file_upload.php';
             header(CONTENT_TYPE_APPLICATION_JSON);
             echo json_encode(['maxFileSize' => file_upload_max_size()]);
@@ -16,7 +16,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         }
 
         if (isset($_GET['attachment']) && !empty($_GET['attachment'])) {
-            if(isset($_GET['thumbnail'])){
+            if (isset($_GET['thumbnail'])) {
                 rvc_read_file('attachments/thumbnail', $_GET['attachment']);
                 break;
             }
@@ -111,11 +111,21 @@ function post_attachment_upload(string $id)
 
     try {
         // Download file
-        file_upload('file', $uploadDir, $id);
-        
+        $file = file_upload('file', $uploadDir, $id);
+
+        // Make a thumbnail for images
+        $supported_format = [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG];
+
+        if (in_array(exif_imagetype($file), $supported_format)) {
+            $image = new SimpleImage();
+            $image->load($file);
+            $image->resizeToHeight(250);
+            $image->save($uploadDir . "thumbnail/" . $id);
+        }
+
         // Tell core we received it
         attachment_update_status($id, "STORED");
-        
+
     } catch (FileUploadException $e) {
         // Tell core something went wrong
         attachment_update_status($id, "CORRUPT");
