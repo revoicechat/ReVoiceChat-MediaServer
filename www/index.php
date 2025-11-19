@@ -3,6 +3,7 @@ require_once 'src/files.php';
 require_once 'src/tools.php';
 
 const CONTENT_TYPE_APPLICATION_JSON = "Content-Type: application/json";
+const SUPPORTED_IMAGETYPE = [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG];
 
 $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_ARRAY);
 
@@ -80,12 +81,20 @@ function post_profile_upload(string $id)
 
         try {
             // Use the user ID as filename, no extension
-            file_upload('file', $uploadDir, $id);
+            $file = file_upload('file', $uploadDir, $id);
         } catch (FileUploadException $e) {
             error_log($e);
             http_response_code(500);
             echo json_encode(['error' => $e]);
             exit;
+        }
+
+        // Resize image
+        if (in_array(exif_imagetype($file), SUPPORTED_IMAGETYPE)) {
+            $image = new SimpleImage();
+            $image->load($file);
+            $image->resizeToHeight(200);
+            $image->save($file);
         }
 
         // OK
@@ -114,9 +123,7 @@ function post_attachment_upload(string $id)
         $file = file_upload('file', $uploadDir, $id);
 
         // Make a thumbnail for images
-        $supported_format = [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG];
-
-        if (in_array(exif_imagetype($file), $supported_format)) {
+        if (in_array(exif_imagetype($file), SUPPORTED_IMAGETYPE)) {
             $image = new SimpleImage();
             $image->load($file);
             $image->resizeToHeight(250);
@@ -125,7 +132,6 @@ function post_attachment_upload(string $id)
 
         // Tell core we received it
         attachment_update_status($id, "STORED");
-
     } catch (FileUploadException $e) {
         // Tell core something went wrong
         attachment_update_status($id, "CORRUPT");
