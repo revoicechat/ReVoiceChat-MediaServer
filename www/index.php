@@ -16,6 +16,11 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         }
 
         if (isset($_GET['attachment']) && !empty($_GET['attachment'])) {
+            if(isset($_GET['thumbnail'])){
+                rvc_read_file('attachments/thumbnail', $_GET['attachment']);
+                break;
+            }
+
             rvc_read_file('attachments', $_GET['attachment']);
             break;
         }
