@@ -19,7 +19,7 @@ www/data/emojis/global/*
 !www/data/emojis/global/.keep
 
 # Settings
-www/settings.ini
+settings.ini
 
 ### IntelliJ IDEA ###
 .idea

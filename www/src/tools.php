@@ -91,14 +91,14 @@ function curl_core(string $url, $data = null, $method = null)
 
 function get_current_user_from_auth()
 {
-    $settings = parse_ini_file(__DIR__ . '/../settings.ini', true);
+    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
     $url = $settings['api']['user_me_url'];
     return curl_core($url);
 }
 
 function attachment_update_status(string $id, string $status)
 {
-    $settings = parse_ini_file(__DIR__ . '/../settings.ini', true);
+    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
     $url = $settings['api']['media_url'] . "/$id";
     curl_core($url, $status, "PATCH");
 }
