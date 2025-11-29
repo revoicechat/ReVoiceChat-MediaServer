@@ -22,7 +22,12 @@ switch ($_SERVER["REQUEST_METHOD"]) {
                 break;
             }
 
-            rvc_download_file('attachments', $_GET['attachment']);
+            if (isset($_GET['download'])) {
+                rvc_download_file('attachments', $_GET['attachment']);
+                break;
+            }
+
+            rvc_read_file('attachments', $_GET['attachment']);
             break;
         }
 
