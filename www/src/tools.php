@@ -26,7 +26,11 @@ function authorization_header()
     exit;
 }
 
-function curl_core(string $url, $data = null, $method = null)
+function curl_core_no_auth($url) {
+    return curl_core($url, null, null, false);
+}
+
+function curl_core(string $url, $data = null, $method = null, $auth_needed = true)
 {
     $ch = curl_init($url);
 
@@ -40,12 +44,16 @@ function curl_core(string $url, $data = null, $method = null)
     // Data available ?
     if (!empty($data)) {
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization:" . authorization_header(), 
-            "Content-Type:application/json"
-        ]);
+        if ($auth_needed) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "Authorization:" . authorization_header(),
+                "Content-Type:application/json"
+            ]);
+        } else {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type:application/json"]);
+        }
     }
-    else{
+    elseif ($auth_needed) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Authorization:" . authorization_header()
         ]);

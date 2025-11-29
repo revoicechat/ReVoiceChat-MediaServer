@@ -38,7 +38,7 @@ function rvc_download_file(string $where, string $name)
 
     error_log($url);
 
-    $core_info = curl_core($url);
+    $core_info = curl_core_no_auth($url);
 
     header('Content-Disposition: attachment; filename="' . $core_info['name'] . '"');
     readfile($file);
