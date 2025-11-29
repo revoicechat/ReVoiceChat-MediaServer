@@ -1,12 +1,11 @@
 FROM php:8.2-apache
 
-RUN a2enmod rewrite && \
-    sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf && \
-    sed -i 's/:80>/:8080>/' /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
 
 COPY www/ /var/www/html/
+COPY settings.ini /var/www/settings.ini
 
-RUN chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html/data
-EXPOSE 8080
-USER www-data
+RUN chown -R www-data:www-data /var/www/html/data \
+    && chmod -R 755 /var/www/html/data
+
+EXPOSE 80
