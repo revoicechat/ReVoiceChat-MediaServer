@@ -1,5 +1,12 @@
 <?php
 
+const FORMAT_ALLOW_PREVIEW = [
+    "image/jpeg",
+    "image/bmp",
+    "image/png",
+    "application/pdf"
+];
+
 function rvc_read_file(string $where, string $name)
 {
     $file = __DIR__ . "/../data/$where/$name";
@@ -35,14 +42,18 @@ function rvc_download_file(string $where, string $name)
     }
 
     $url = $settings['api']['media_url'] . "/$name";
-
-    error_log($url);
-
     $core_info = curl_core_no_auth($url);
+    $mime_type = mime_content_type($file);
 
-    header('Content-Disposition: attachment; filename="' . $core_info['name'] . '"');
+    if(in_array($mime_type, FORMAT_ALLOW_PREVIEW)){
+        header("Content-Disposition: inline");
+        header("Content-Type: $type");
+    }
+    else{
+        header('Content-Disposition: attachment; filename="' . $core_info['name'] . '"');
+    }
+
     readfile($file);
-
     exit;
 }
 
