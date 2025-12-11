@@ -31,34 +31,9 @@ git clone https://github.com/revoicechat/ReVoiceChat-MediaServer
 
 ## Create VirtualHost
 
-### Create new VirtualHost
+### Create new VirtualHost from exemple
 ```sh
-sudo nano /etc/apache2/sites-available/rvc_media.conf
-```
-
-### VirtualHost exemple
-```apache
-<VirtualHost *:88>
-    Header set Access-Control-Allow-Origin "*"
-    Header set Access-Control-Allow-Methods: GET,POST,OPTIONS,DELETE
-
-    DocumentRoot /srv/rvc/ReVoiceChat-MediaServer/www/
-    DirectoryIndex index.php
-
-    <Directory /srv/rvc/ReVoiceChat-MediaServer/www/>
-        AllowOverride all
-        Require all granted
-    </Directory>
-
-    <Directory /srv/rvc/ReVoiceChat-MediaServer/www/data/>
-        AllowOverride None
-        Require all denied
-    </Directory>
-
-    ErrorLog /var/log/rvc/media_error.log
-    TransferLog /var/log/rvc/media_access.log
-    LogLevel info
-</VirtualHost>
+sudo cp rvc_media.exemple.conf /etc/apache2/sites-available/rvc_media.conf
 ```
 
 ### Make sure **/var/log/rvc/** exist and apache2 can write to it
@@ -84,7 +59,6 @@ sudo chgrp www-data ./www/data
 ```sh
 sudo a2ensite rvc_media.conf
 ```
-
 ```sh
 sudo systemctl reload apache2
 ```
