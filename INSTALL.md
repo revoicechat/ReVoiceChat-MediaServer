@@ -28,6 +28,9 @@ For this guide, we will use ```/srv/rvc``` but you can use any directory (don't 
 ```sh
 git clone https://github.com/revoicechat/ReVoiceChat-MediaServer
 ```
+```sh
+cd ReVoiceChat-MediaServer/
+```
 
 ## Create VirtualHost
 
@@ -55,7 +58,12 @@ sudo chown www-data ./www/data
 sudo chgrp www-data ./www/data
 ```
 
-### Enable **VirtualHost**
+### Disable *000-default*
+```sh
+sudo a2dissite 000-default.conf
+```
+
+### Enable *VirtualHost*
 ```sh
 sudo a2ensite rvc_media.conf
 ```
