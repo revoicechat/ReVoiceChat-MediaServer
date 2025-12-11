@@ -39,6 +39,13 @@ cd ReVoiceChat-MediaServer/
 sudo cp rvc_media.exemple.conf /etc/apache2/sites-available/rvc_media.conf
 ```
 
+### Edit apache2 ports config
+```sh
+sudo nano /etc/apache2/ports.conf
+```
+
+Add the following line : ```Listen 88``` after ```Listen 80```
+
 ### Make sure **/var/log/rvc/** exist and apache2 can write to it
 ```sh
 sudo mkdir -p /var/log/rvc
@@ -52,10 +59,10 @@ sudo chgrp www-data /var/log/rvc
 
 ### Make sure apache2 can write inside `www/data`
 ```sh
-sudo chown www-data ./www/data
+sudo chown -R www-data ./www/data
 ```
 ```sh
-sudo chgrp www-data ./www/data
+sudo chgrp -R www-data ./www/data
 ```
 
 ### Disable *000-default*
@@ -69,4 +76,9 @@ sudo a2ensite rvc_media.conf
 ```
 ```sh
 sudo systemctl reload apache2
+```
+
+### Copy config from template
+```sh
+sudo cp settings.ini.exemple settings.ini
 ```
