@@ -1,6 +1,31 @@
 # How to install ReVoiceChat-MediaServer
 
-## Install Apache2 and PHP
+## Clone this repository
+
+For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
+
+```sh
+git clone https://github.com/revoicechat/ReVoiceChat-MediaServer
+```
+```sh
+cd ReVoiceChat-MediaServer/
+```
+
+## Option A : Auto install
+
+### Run installer (debian)
+```sh
+sudo install.sh
+```
+
+### Edit apache2 ports config
+```sh
+sudo nano /etc/apache2/ports.conf
+```
+Add the following line : ```Listen 88```
+
+## Option B : Manual install
+### Install Apache2 and PHP
 ```sh
 sudo apt-get install apache2-utils apache2 php libapache2-mod-php php-json php-zip php-curl php-gd -y
 ```
@@ -21,18 +46,7 @@ sudo a2enmod rewrite
 sudo systemctl restart apache2
 ```
 
-## Clone this repository
-
-For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
-
-```sh
-git clone https://github.com/revoicechat/ReVoiceChat-MediaServer
-```
-```sh
-cd ReVoiceChat-MediaServer/
-```
-
-## Create VirtualHost
+### Create VirtualHost
 
 ### Create new VirtualHost from exemple
 ```sh
@@ -43,7 +57,6 @@ sudo cp rvc_media.exemple.conf /etc/apache2/sites-available/rvc_media.conf
 ```sh
 sudo nano /etc/apache2/ports.conf
 ```
-
 Add the following line : ```Listen 88``` after ```Listen 80```
 
 ### Make sure **/var/log/rvc/** exist and apache2 can write to it
