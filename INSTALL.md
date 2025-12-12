@@ -93,5 +93,5 @@ sudo systemctl reload apache2
 
 ### Copy config from template
 ```sh
-sudo cp settings.ini.exemple settings.ini
+cp settings.ini.exemple settings.ini
 ```

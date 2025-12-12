@@ -22,11 +22,16 @@ sudo chown www-data /var/log/rvc
 sudo chgrp www-data /var/log/rvc
 
 echo "Changing permissions on 'data' directory ..."
-sudo chown www-data ./www/data
-sudo chgrp www-data ./www/data
+sudo chown -R www-data ./www/data
+sudo chgrp -R www-data ./www/data
 
 echo "Enabling Apache2 ..."
 sudo systemctl enable apache2
 sudo systemctl restart apache2
+
+echo "Copying settings.ini ..."
+sudo cp settings.ini.exemple settings.ini
+
+nano settings.ini
 
 echo "Done."
