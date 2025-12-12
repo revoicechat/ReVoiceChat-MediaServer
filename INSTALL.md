@@ -15,7 +15,7 @@ cd ReVoiceChat-MediaServer/
 
 ### Run installer (debian)
 ```sh
-sudo install.sh
+sudo ./install.sh
 ```
 
 ### Edit apache2 ports config
