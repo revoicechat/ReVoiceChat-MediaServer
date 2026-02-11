@@ -80,27 +80,38 @@ function curl_core(string $url, $data = null, $method = null, $auth_needed = tru
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    if ($httpCode == 200) {
-        return json_decode($response, true);
+    switch ($httpCode) {
+        case 200:
+            return json_decode($response, true);
+        case 404:
+            return null;
+        default:
+            error_log("cURL request not OK,\nResponse: $response,\nHTTP Code: $httpCode");
+            error_log("cURL Info:" . print_r(curl_getinfo($ch), true));
+
+            http_response_code($httpCode);
+            echo json_encode(
+                [
+                    'error' => $response,
+                    'code' => $httpCode
+                ]
+            );
+            exit;
     }
 
-    error_log("cURL request not OK,\nResponse: $response,\nHTTP Code: $httpCode");
-    error_log("cURL Info:" . print_r(curl_getinfo($ch), true));
-
-    http_response_code($httpCode);
-    echo json_encode(
-        [
-            'error' => $response,
-            'code' => $httpCode
-        ]
-    );
-    exit;
 }
 
 function get_current_user_from_auth()
 {
     $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
     $url = $settings['api']['user_me_url'];
+    return curl_core($url);
+}
+
+function get_server_by_id($id)
+{
+    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
+    $url = $settings['api']['server_by_id_url'] . $id;
     return curl_core($url);
 }
 
