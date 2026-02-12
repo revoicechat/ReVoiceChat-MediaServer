@@ -104,6 +104,7 @@ function post_profile_upload()
         // OK
         http_response_code(200);
         echo json_encode(['success' => true, 'path' => 'profiles/' . $id]);
+        profile_update_picture($id);
         exit;
     }
 

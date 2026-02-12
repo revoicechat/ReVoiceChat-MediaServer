@@ -121,3 +121,10 @@ function attachment_update_status(string $id, string $status)
     $url = $settings['api']['media_url'] . "/$id";
     curl_core($url, $status, "PATCH");
 }
+
+function profile_update_picture(string $id)
+{
+    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
+    $url = $settings['api']['profile_picture_url'] . "/$id";
+    curl_core($url, null, "PATCH");
+}
