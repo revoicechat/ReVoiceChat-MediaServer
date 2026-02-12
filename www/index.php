@@ -92,6 +92,7 @@ function post_profile_upload()
             echo json_encode(['error' => $e]);
             exit;
         }
+        profile_update_picture($id);
 
         // Resize image
         if (in_array(exif_imagetype($file), SUPPORTED_IMAGETYPE)) {
@@ -104,7 +105,6 @@ function post_profile_upload()
         // OK
         http_response_code(200);
         echo json_encode(['success' => true, 'path' => 'profiles/' . $id]);
-        profile_update_picture($id);
         exit;
     }
 
