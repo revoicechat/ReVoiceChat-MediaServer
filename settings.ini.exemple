@@ -1,5 +1,5 @@
 [api]
 user_me_url = http://localhost:8080/api/user/me
-server_by_id_url = http://localhost:8080/api/server/
+server_by_id_url = http://localhost:8080/api/server
 media_url = http://localhost:8080/api/media
 profile_picture_url = http://localhost:8080/api/profile

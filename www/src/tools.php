@@ -111,7 +111,7 @@ function get_current_user_from_auth()
 function get_server_by_id($id)
 {
     $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
-    $url = $settings['api']['server_by_id_url'] . $id;
+    $url = $settings['api']['server_by_id_url'] . "/$id";
     return curl_core($url);
 }
 
