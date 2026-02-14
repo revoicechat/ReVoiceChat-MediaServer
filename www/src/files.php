@@ -7,13 +7,18 @@ const FORMAT_ALLOW_PREVIEW = [
     "application/pdf"
 ];
 
-function rvc_read_file(string $where, string $name)
+function rvc_read_file(string $where, string $name, string $option = "")
 {
     $file = __DIR__ . "/../data/$where/$name";
 
     if (!file_exists($file)) {
-        if ($where == "profiles" && $name != "default-avatar") {
-            rvc_read_file("profiles", "default-avatar");
+        if ($where == "profiles") {
+            if($option == "server"){
+                rvc_read_file("profiles", "default-server");
+            }
+            else{
+                rvc_read_file("profiles", "default-avatar");
+            }
             exit;
         }
         http_response_code(404);

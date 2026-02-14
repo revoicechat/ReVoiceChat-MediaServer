@@ -27,7 +27,12 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         }
 
         if (isset($_GET['profiles']) && !empty($_GET['profiles'])) {
-            rvc_read_file('profiles', $_GET['profiles']);
+            if(isset($_GET['server'])){
+                rvc_read_file('profiles', $_GET['profiles'], 'server');
+            }
+            else{
+                rvc_read_file('profiles', $_GET['profiles']);
+            }
             break;
         }
 
