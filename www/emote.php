@@ -115,6 +115,7 @@ function post_emoji_upload(string $id)
         attachment_update_status($id, "CORRUPT");
 
         http_response_code(500);
+        error_log("Error while upload emoji $id, error: $e");
         echo json_encode(['error' => $e]);
         exit;
     }
